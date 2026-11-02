@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -32,34 +33,35 @@ h2{margin:6px 0}
 <script>
 // ===== CONFIGURAÇÃO (edite aqui) =====
 const WA_NUMBER = "245955335919";
-const ADMIN_PIN = "1234"; // DEMO: mude! (segurança real vem na Etapa 2)
-const PAYMENTS = {enabled:false, providers:[]}; // Preparado para pagamentos móveis autorizados no futuro
+const SB_URL = "https://ytohinhwsdqjgvbjskix.supabase.co";
+const SB_KEY = "sb_publishable_e8Iz7dnYqOylSJl6H3axmA_rnxi1irX";
+const PAYMENTS = {enabled:false, providers:[]};
 // =====================================
 const T={pt:{demo:"VERSÃO DE DEMONSTRAÇÃO – dados fictícios",home:"Início",cat:"Catálogo",sup:"Fornecedores",quote:"Orçamento",area:"Fornecedor",adm:"Admin",
 h1:"Materiais de construção, ligados.",h2:"Peça orçamentos a lojas, fornecedores, transportadores e profissionais. Sem comprar nada.",cta:"Ver catálogo",cta2:"Pedir orçamento",
 search:"Pesquisar material…",all:"Todas",add:"Adicionar",inq:"Itens no orçamento",none:"Nenhum item. Adicione no catálogo.",remove:"Remover",
 name:"Nome",phone:"Telefone / WhatsApp",zone:"Zona / bairro",notes:"Observações",send:"Enviar pedido e abrir WhatsApp",sent:"Pedido guardado! A abrir WhatsApp…",need:"Preencha nome, telefone e pelo menos 1 item.",
 price:"Preço sob consulta",demoT:"DEMO",wa:"Contactar por WhatsApp",kinds:{Loja:"Loja",Fornecedor:"Fornecedor",Transportador:"Transportador",Profissional:"Profissional"},
-reg:"Registar produto",pn:"Nome do produto",pc:"Categoria",pp:"Preço (opcional)",pu:"Unidade (ex.: saco, m³)",mine:"Produtos registados (neste telemóvel)",save:"Guardar produto",saved:"Produto guardado!",
-pin:"PIN de administrador",enter:"Entrar",bad:"PIN errado",orders:"Encomendas",noord:"Sem pedidos ainda.",pay:"Pagamento: ainda não ativado",del:"Apagar",
+reg:"Registar produto",pn:"Nome do produto",pc:"Categoria",pp:"Preço (opcional)",pu:"Unidade (ex.: saco, m³)",mine:"Produtos registados (neste telemóvel)",save:"Guardar produto",saved:"Produto enviado! Aparece no catálogo depois de aprovado.",
+pin:"PIN de administrador",enter:"Entrar",bad:"Email ou palavra-passe errados",email:"Email",password:"Palavra-passe",logout:"Sair",pending:"Produtos por aprovar",approve:"Aprovar",err:"Erro de ligação. Tente de novo.",orders:"Encomendas",noord:"Sem pedidos ainda.",pay:"Pagamento: ainda não ativado",del:"Apagar",
 st:{new:"Novo",contact:"Contactado",quoted:"Orçado",done:"Concluído",cancel:"Cancelado"},
-how:["1. Escolha materiais","2. Peça orçamento","3. Receba propostas no WhatsApp"],note:"Nota: nesta versão os dados ficam guardados só neste telemóvel."},
+how:["1. Escolha materiais","2. Peça orçamento","3. Receba propostas no WhatsApp"],note:"Os pedidos são enviados para a Bissau Connect e pelo WhatsApp."},
 fr:{demo:"VERSION DE DÉMONSTRATION – données fictives",home:"Accueil",cat:"Catalogue",sup:"Fournisseurs",quote:"Devis",area:"Fournisseur",adm:"Admin",
 h1:"Matériaux de construction, connectés.",h2:"Demandez des devis aux magasins, fournisseurs, transporteurs et professionnels. Sans rien acheter.",cta:"Voir le catalogue",cta2:"Demander un devis",
 search:"Rechercher un matériau…",all:"Toutes",add:"Ajouter",inq:"Articles du devis",none:"Aucun article. Ajoutez depuis le catalogue.",remove:"Retirer",
 name:"Nom",phone:"Téléphone / WhatsApp",zone:"Zone / quartier",notes:"Remarques",send:"Envoyer la demande et ouvrir WhatsApp",sent:"Demande enregistrée ! Ouverture de WhatsApp…",need:"Indiquez nom, téléphone et au moins 1 article.",
 price:"Prix sur demande",demoT:"DÉMO",wa:"Contacter via WhatsApp",kinds:{Loja:"Magasin",Fornecedor:"Fournisseur",Transportador:"Transporteur",Profissional:"Professionnel"},
-reg:"Enregistrer un produit",pn:"Nom du produit",pc:"Catégorie",pp:"Prix (facultatif)",pu:"Unité (ex. : sac, m³)",mine:"Produits enregistrés (sur ce téléphone)",save:"Enregistrer le produit",saved:"Produit enregistré !",
-pin:"Code PIN administrateur",enter:"Entrer",bad:"PIN incorrect",orders:"Commandes",noord:"Aucune demande pour l’instant.",pay:"Paiement : pas encore activé",del:"Supprimer",
+reg:"Enregistrer un produit",pn:"Nom du produit",pc:"Catégorie",pp:"Prix (facultatif)",pu:"Unité (ex. : sac, m³)",mine:"Produits enregistrés (sur ce téléphone)",save:"Enregistrer le produit",saved:"Produit envoyé ! Il apparaîtra après approbation.",
+pin:"Code PIN administrateur",enter:"Entrer",bad:"E-mail ou mot de passe incorrect",email:"E-mail",password:"Mot de passe",logout:"Quitter",pending:"Produits à approuver",approve:"Approuver",err:"Erreur de connexion. Réessayez.",orders:"Commandes",noord:"Aucune demande pour l’instant.",pay:"Paiement : pas encore activé",del:"Supprimer",
 st:{new:"Nouveau",contact:"Contacté",quoted:"Devis envoyé",done:"Terminé",cancel:"Annulé"},
-how:["1. Choisissez les matériaux","2. Demandez un devis","3. Recevez les offres sur WhatsApp"],note:"Note : dans cette version, les données restent sur ce téléphone."}};
+how:["1. Choisissez les matériaux","2. Demandez un devis","3. Recevez les offres sur WhatsApp"],note:"Les demandes sont envoyées à Bissau Connect et par WhatsApp."}};
 const CATS={Cimento:"Cimento / Ciment",Ferro:"Ferro / Fer",Areia:"Areia e brita / Sable",Telhas:"Telhas / Tuiles",Tintas:"Tintas / Peinture",Eletrico:"Elétrico / Électricité"};
 const PRODS=[["Cimento (saco 50 kg)","Ciment (sac 50 kg)","Cimento"],["Varão de ferro 12 mm","Fer à béton 12 mm","Ferro"],["Areia (m³)","Sable (m³)","Areia"],["Brita (m³)","Gravier (m³)","Areia"],["Chapa de zinco","Tôle ondulée","Telhas"],["Tinta de parede (balde)","Peinture murale (seau)","Tintas"],["Cabo elétrico 2,5 mm","Câble électrique 2,5 mm","Eletrico"],["Bloco de cimento","Parpaing","Cimento"]].map((p,i)=>({id:"d"+i,pt:p[0],fr:p[1],cat:p[2],demo:1}));
 const SUPS=[["Loja Demo A","Loja","Bissau – zona demo"],["Fornecedor Demo B","Fornecedor","Bissau – zona demo"],["Transporte Demo C","Transportador","Bissau e arredores (demo)"],["Pedreiro Demo D","Profissional","Bissau – zona demo"]];
 let L="pt",V="home",Q="",C="",admin=false;
 const ld=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}};
 const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
-let cart=[],mineP=ld("bc_prod",[]),orders=ld("bc_orders",[]);
+let cart=[],mineP=[],orders=[],pend=[],tok=null;
 try{L=localStorage.getItem("bc_lang")||"pt"}catch(e){}
 const t=()=>T[L],esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const all=()=>PRODS.concat(mineP);const nm=p=>p.demo?p[L]:p.pt;
@@ -77,21 +79,26 @@ if(V=="suppliers")return `<h2>${x.sup}</h2>`+SUPS.map(s=>`<div class=card><b>${s
 if(V=="quote")return `<h2>${x.quote}</h2><div class=card><b>${x.inq}</b>${cart.length?cart.map(id=>{const p=all().find(a=>a.id==id);return p?`<div class=row><span>${esc(nm(p))}</span><button class="btn red sm" onclick="rmC('${id}')">✕</button></div>`:""}).join(""):`<div class=mu>${x.none}</div>`}</div>
 <label>${x.name}</label><input id=n><label>${x.phone}</label><input id=ph type=tel><label>${x.zone}</label><input id=z><label>${x.notes}</label><textarea id=nt rows=3></textarea><button class="btn wa" style="width:100%" onclick="submitQ()">${x.send}</button>`;
 if(V=="area")return `<h2>${x.reg}</h2><label>${x.pn}</label><input id=pn><label>${x.pc}</label><select id=pc>${Object.keys(CATS).map(c=>`<option value="${c}">${CATS[c].split(" / ")[L=="pt"?0:1]}</option>`).join("")}</select><label>${x.pp}</label><input id=pp><label>${x.pu}</label><input id=pu><button class=btn style="width:100%" onclick="addP()">${x.save}</button>
-<h3>${x.mine}</h3>${mineP.map(p=>`<div class=card><div class=row><span>${esc(p.pt)}</span><button class="btn red sm" onclick="delP('${p.id}')">✕</button></div></div>`).join("")}`;
-if(V=="admin"){if(!admin)return `<h2>${x.adm}</h2><label>${x.pin}</label><input id=pin type=password inputmode=numeric><button class=btn onclick="login()">${x.enter}</button>`;
-return `<h2>${x.orders} (${orders.length})</h2><p class=mu>${x.pay}</p>`+(orders.length?orders.map((o,i)=>`<div class=card><b>${esc(o.name)}</b> · ${esc(o.phone)}<div class=mu>${esc(o.zone||"")} · ${new Date(o.date).toLocaleString()}</div><div>${o.items.map(esc).join(", ")}</div>${o.notes?`<div class=mu>${esc(o.notes)}</div>`:""}<select onchange="orders[${i}].status=this.value;sv('bc_orders',orders)">${Object.keys(x.st).map(k=>`<option value=${k} ${o.status==k?"selected":""}>${x.st[k]}</option>`).join("")}</select><div class=row><button class="btn wa sm" onclick="window.open('https://wa.me/'+'${esc(o.phone).replace(/\D/g,"")}')">💬 ${x.wa}</button><button class="btn red sm" onclick="delO(${i})">${x.del}</button></div></div>`).join(""):`<div class=mu>${x.noord}</div>`)}}
+`;
+if(V=="admin"){if(!tok)return `<h2>${x.adm}</h2><label>${x.email}</label><input id=em type=email autocomplete=username><label>${x.password}</label><input id=pw type=password autocomplete=current-password><button class=btn onclick="login()">${x.enter}</button>`;
+return `<div class=row><h2>${x.orders} (${orders.length})</h2><button class="btn sm" onclick="logout()">${x.logout}</button></div><p class=mu>${x.pay}</p>`+(orders.length?orders.map(o=>`<div class=card><b>${esc(o.name)}</b> · ${esc(o.phone)}<div class=mu>${esc(o.zone||"")} · ${new Date(o.created_at).toLocaleString()}</div><div>${(o.items||[]).map(esc).join(", ")}</div>${o.notes?`<div class=mu>${esc(o.notes)}</div>`:""}<select onchange="setSt('${o.id}',this.value)">${Object.keys(x.st).map(k=>`<option value=${k} ${o.status==k?"selected":""}>${x.st[k]}</option>`).join("")}</select><div class=row><button class="btn wa sm" onclick="window.open('https://wa.me/'+'${esc(o.phone).replace(/\D/g,"")}')">💬 ${x.wa}</button><button class="btn red sm" onclick="delO('${o.id}')">${x.del}</button></div></div>`).join(""):`<div class=mu>${x.noord}</div>`)+`<h2>${x.pending} (${pend.length})</h2>`+pend.map(p=>`<div class=card><b>${esc(p.name)}</b><div class=mu>${esc(p.price||"")} ${esc(p.unit||"")}</div><div class=row><button class="btn sm" onclick="appr('${p.id}')">${x.approve}</button><button class="btn red sm" onclick="delP('${p.id}')">${x.del}</button></div></div>`).join("")}}
 function render(keep){const x=t();document.documentElement.lang=L;demo.textContent=x.demo;lang.textContent=L=="pt"?"FR":"PT";
 nav.innerHTML=[["home","🏠",x.home],["catalog","🧱",x.cat],["suppliers","🏪",x.sup],["quote","📝",x.quote+(cart.length?" ("+cart.length+")":"")],["area","📦",x.area],["admin","⚙️",x.adm]].map(n=>`<button class="${V==n[0]?"on":""}" onclick="go('${n[0]}')"><span>${n[1]}</span>${n[2]}</button>`).join("");
 app.innerHTML=view();if(keep){const q=document.getElementById("q");if(q){q.focus();q.setSelectionRange(Q.length,Q.length)}}}
-function submitQ(){const x=t(),n=g("n"),ph=g("ph");if(!n||!ph||!cart.length)return alert(x.need);
-const items=cart.map(id=>nm(all().find(a=>a.id==id)||{pt:id}));
-const o={name:n,phone:ph,zone:g("z"),notes:g("nt"),items,status:"new",date:Date.now(),payment:{status:"not_enabled",method:null}};
-orders.unshift(o);sv("bc_orders",orders);cart=[];
-wa(`Bissau Connect – ${x.quote}\n${n} (${ph})\n${o.zone}\n- ${items.join("\n- ")}\n${o.notes}`);alert(x.sent);render()}
 const g=i=>document.getElementById(i).value.trim();
-function addP(){const n=g("pn");if(!n)return;mineP.push({id:"u"+Date.now(),pt:n,cat:g("pc"),price:g("pp"),unit:g("pu")});sv("bc_prod",mineP);alert(t().saved);render()}
-function delP(id){mineP=mineP.filter(p=>p.id!=id);sv("bc_prod",mineP);render()}
-function login(){if(g("pin")==ADMIN_PIN){admin=true;render()}else alert(t().bad)}
-function delO(i){orders.splice(i,1);sv("bc_orders",orders);render()}
-render();
+async function sb(path,o={}){const h={apikey:SB_KEY,"Content-Type":"application/json",...(o.headers||{})};if(tok)h.Authorization="Bearer "+tok;const r=await fetch(SB_URL+path,{...o,headers:h});if(!r.ok)throw new Error(await r.text());const x=await r.text();return x?JSON.parse(x):null}
+async function loadP(){try{mineP=(await sb("/rest/v1/products?select=*&approved=eq.true&order=created_at.desc")).map(p=>({id:p.id,pt:p.name,cat:p.category,price:p.price,unit:p.unit}))}catch(e){}render()}
+async function submitQ(){const x=t(),n=g("n"),ph=g("ph");if(!n||!ph||!cart.length)return alert(x.need);
+const items=cart.map(id=>nm(all().find(a=>a.id==id)||{pt:id})),z=g("z"),nt=g("nt");
+try{await sb("/rest/v1/orders",{method:"POST",headers:{Prefer:"return=minimal"},body:JSON.stringify({name:n,phone:ph,zone:z,notes:nt,items})})}catch(e){alert(x.err)}
+cart=[];wa(`Bissau Connect – ${x.quote}\n${n} (${ph})\n${z}\n- ${items.join("\n- ")}\n${nt}`);alert(x.sent);render()}
+async function addP(){const n=g("pn");if(!n)return;try{await sb("/rest/v1/products",{method:"POST",headers:{Prefer:"return=minimal"},body:JSON.stringify({name:n,category:g("pc"),price:g("pp")||null,unit:g("pu")||null,approved:false})});alert(t().saved);render()}catch(e){alert(t().err)}}
+async function login(){try{const r=await fetch(SB_URL+"/auth/v1/token?grant_type=password",{method:"POST",headers:{apikey:SB_KEY,"Content-Type":"application/json"},body:JSON.stringify({email:g("em"),password:g("pw")})});const d=await r.json();if(!d.access_token)throw 0;tok=d.access_token;await loadAdmin()}catch(e){alert(t().bad)}}
+async function loadAdmin(){try{orders=await sb("/rest/v1/orders?select=*&order=created_at.desc");pend=await sb("/rest/v1/products?select=*&approved=eq.false&order=created_at.desc")}catch(e){alert(t().err)}render()}
+function logout(){tok=null;orders=[];pend=[];loadP()}
+async function setSt(id,v){try{await sb("/rest/v1/orders?id=eq."+id,{method:"PATCH",headers:{Prefer:"return=minimal"},body:JSON.stringify({status:v})})}catch(e){alert(t().err)}}
+async function delO(id){if(!confirm("OK?"))return;try{await sb("/rest/v1/orders?id=eq."+id,{method:"DELETE"});loadAdmin()}catch(e){alert(t().err)}}
+async function appr(id){try{await sb("/rest/v1/products?id=eq."+id,{method:"PATCH",headers:{Prefer:"return=minimal"},body:JSON.stringify({approved:true})});await loadAdmin();loadP()}catch(e){alert(t().err)}}
+async function delP(id){try{await sb("/rest/v1/products?id=eq."+id,{method:"DELETE"});loadAdmin()}catch(e){alert(t().err)}}
+render();loadP();
 </script></body></html>
