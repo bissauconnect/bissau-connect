@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bissau Connect</title>
+<style>
+:root{--bg:#f6f7f4;--card:#fff;--tx:#1b2a22;--mu:#5d6b63;--pr:#0a7a3d;--ac:#f2b705;--bd:#dfe4de;--bad:#b3261e;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#121a16;--card:#1b2620;--tx:#eef3ef;--mu:#9fb0a6;--bd:#2c3b33;--pr:#35b36b;color-scheme:dark}}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:76px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--pr);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:10px 14px}
+header b{font-size:18px}header button{background:#fff3;color:#fff;border:0;border-radius:8px;padding:6px 10px;font-weight:700}
+main{max-width:760px;margin:auto;padding:14px}
+.demo{background:var(--ac);color:#222;font-size:12px;text-align:center;padding:4px}
+.hero{background:linear-gradient(135deg,var(--pr),#064d28);color:#fff;border-radius:16px;padding:22px}
+.hero h1{margin:0 0 8px;font-size:24px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px;margin:10px 0}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.btn{background:var(--pr);color:#fff;border:0;border-radius:10px;padding:11px 14px;font-weight:700;font-size:15px;cursor:pointer}
+.btn.alt{background:var(--ac);color:#222}.btn.wa{background:#1fa855}.btn.sm{padding:7px 10px;font-size:13px}.btn.red{background:var(--bad)}
+input,select,textarea{width:100%;padding:11px;margin:5px 0 10px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit}
+label{font-size:13px;color:var(--mu);font-weight:600}
+.tag{display:inline-block;font-size:11px;background:var(--ac);color:#222;border-radius:6px;padding:1px 6px;font-weight:700}
+.mu{color:var(--mu);font-size:14px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--bd);display:flex;padding-bottom:env(safe-area-inset-bottom,0px)}
+nav button{flex:1;background:none;border:0;color:var(--mu);padding:8px 0;font-size:11px}nav button span{display:block;font-size:20px}nav button.on{color:var(--pr);font-weight:700}
+h2{margin:6px 0}
+</style></head><body>
+<div class="demo" id="demo"></div>
+<header><b>🏗️ Bissau Connect</b><button id="lang" onclick="setLang()">FR</button></header>
+<main id="app"></main>
+<nav id="nav"></nav>
+<script>
+// ===== CONFIGURAÇÃO (edite aqui) =====
+const WA_NUMBER = "245955335919";
+const ADMIN_PIN = "1234"; // DEMO: mude! (segurança real vem na Etapa 2)
+const PAYMENTS = {enabled:false, providers:[]}; // Preparado para pagamentos móveis autorizados no futuro
+// =====================================
+const T={pt:{demo:"VERSÃO DE DEMONSTRAÇÃO – dados fictícios",home:"Início",cat:"Catálogo",sup:"Fornecedores",quote:"Orçamento",area:"Fornecedor",adm:"Admin",
+h1:"Materiais de construção, ligados.",h2:"Peça orçamentos a lojas, fornecedores, transportadores e profissionais. Sem comprar nada.",cta:"Ver catálogo",cta2:"Pedir orçamento",
+search:"Pesquisar material…",all:"Todas",add:"Adicionar",inq:"Itens no orçamento",none:"Nenhum item. Adicione no catálogo.",remove:"Remover",
+name:"Nome",phone:"Telefone / WhatsApp",zone:"Zona / bairro",notes:"Observações",send:"Enviar pedido e abrir WhatsApp",sent:"Pedido guardado! A abrir WhatsApp…",need:"Preencha nome, telefone e pelo menos 1 item.",
+price:"Preço sob consulta",demoT:"DEMO",wa:"Contactar por WhatsApp",kinds:{Loja:"Loja",Fornecedor:"Fornecedor",Transportador:"Transportador",Profissional:"Profissional"},
+reg:"Registar produto",pn:"Nome do produto",pc:"Categoria",pp:"Preço (opcional)",pu:"Unidade (ex.: saco, m³)",mine:"Produtos registados (neste telemóvel)",save:"Guardar produto",saved:"Produto guardado!",
+pin:"PIN de administrador",enter:"Entrar",bad:"PIN errado",orders:"Encomendas",noord:"Sem pedidos ainda.",pay:"Pagamento: ainda não ativado",del:"Apagar",
+st:{new:"Novo",contact:"Contactado",quoted:"Orçado",done:"Concluído",cancel:"Cancelado"},
+how:["1. Escolha materiais","2. Peça orçamento","3. Receba propostas no WhatsApp"],note:"Nota: nesta versão os dados ficam guardados só neste telemóvel."},
+fr:{demo:"VERSION DE DÉMONSTRATION – données fictives",home:"Accueil",cat:"Catalogue",sup:"Fournisseurs",quote:"Devis",area:"Fournisseur",adm:"Admin",
+h1:"Matériaux de construction, connectés.",h2:"Demandez des devis aux magasins, fournisseurs, transporteurs et professionnels. Sans rien acheter.",cta:"Voir le catalogue",cta2:"Demander un devis",
+search:"Rechercher un matériau…",all:"Toutes",add:"Ajouter",inq:"Articles du devis",none:"Aucun article. Ajoutez depuis le catalogue.",remove:"Retirer",
+name:"Nom",phone:"Téléphone / WhatsApp",zone:"Zone / quartier",notes:"Remarques",send:"Envoyer la demande et ouvrir WhatsApp",sent:"Demande enregistrée ! Ouverture de WhatsApp…",need:"Indiquez nom, téléphone et au moins 1 article.",
+price:"Prix sur demande",demoT:"DÉMO",wa:"Contacter via WhatsApp",kinds:{Loja:"Magasin",Fornecedor:"Fournisseur",Transportador:"Transporteur",Profissional:"Professionnel"},
+reg:"Enregistrer un produit",pn:"Nom du produit",pc:"Catégorie",pp:"Prix (facultatif)",pu:"Unité (ex. : sac, m³)",mine:"Produits enregistrés (sur ce téléphone)",save:"Enregistrer le produit",saved:"Produit enregistré !",
+pin:"Code PIN administrateur",enter:"Entrer",bad:"PIN incorrect",orders:"Commandes",noord:"Aucune demande pour l’instant.",pay:"Paiement : pas encore activé",del:"Supprimer",
+st:{new:"Nouveau",contact:"Contacté",quoted:"Devis envoyé",done:"Terminé",cancel:"Annulé"},
+how:["1. Choisissez les matériaux","2. Demandez un devis","3. Recevez les offres sur WhatsApp"],note:"Note : dans cette version, les données restent sur ce téléphone."}};
+const CATS={Cimento:"Cimento / Ciment",Ferro:"Ferro / Fer",Areia:"Areia e brita / Sable",Telhas:"Telhas / Tuiles",Tintas:"Tintas / Peinture",Eletrico:"Elétrico / Électricité"};
+const PRODS=[["Cimento (saco 50 kg)","Ciment (sac 50 kg)","Cimento"],["Varão de ferro 12 mm","Fer à béton 12 mm","Ferro"],["Areia (m³)","Sable (m³)","Areia"],["Brita (m³)","Gravier (m³)","Areia"],["Chapa de zinco","Tôle ondulée","Telhas"],["Tinta de parede (balde)","Peinture murale (seau)","Tintas"],["Cabo elétrico 2,5 mm","Câble électrique 2,5 mm","Eletrico"],["Bloco de cimento","Parpaing","Cimento"]].map((p,i)=>({id:"d"+i,pt:p[0],fr:p[1],cat:p[2],demo:1}));
+const SUPS=[["Loja Demo A","Loja","Bissau – zona demo"],["Fornecedor Demo B","Fornecedor","Bissau – zona demo"],["Transporte Demo C","Transportador","Bissau e arredores (demo)"],["Pedreiro Demo D","Profissional","Bissau – zona demo"]];
+let L="pt",V="home",Q="",C="",admin=false;
+const ld=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}};
+const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+let cart=[],mineP=ld("bc_prod",[]),orders=ld("bc_orders",[]);
+try{L=localStorage.getItem("bc_lang")||"pt"}catch(e){}
+const t=()=>T[L],esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const all=()=>PRODS.concat(mineP);const nm=p=>p.demo?p[L]:p.pt;
+function setLang(){L=L=="pt"?"fr":"pt";try{localStorage.setItem("bc_lang",L)}catch(e){}render()}
+function go(v){V=v;render();scrollTo(0,0)}
+function wa(text){const u="https://wa.me/"+WA_NUMBER+"?text="+encodeURIComponent(text);window.open(u,"_blank")}
+function addC(id){if(!cart.includes(id))cart.push(id);render()}
+function rmC(id){cart=cart.filter(x=>x!=id);render()}
+function view(){const x=t();
+if(V=="home")return `<div class=hero><h1>${x.h1}</h1><p>${x.h2}</p><div class=row style="justify-content:flex-start"><button class="btn alt" onclick="go('catalog')">${x.cta}</button><button class=btn style="background:#fff3" onclick="go('quote')">${x.cta2}</button></div></div>${x.how.map(h=>`<div class=card><b>${h}</b></div>`).join("")}<p class=mu>${x.note}</p>`;
+if(V=="catalog"){const cs=Object.keys(CATS);const l=all().filter(p=>(!C||p.cat==C)&&nm(p).toLowerCase().includes(Q.toLowerCase()));
+return `<h2>${x.cat}</h2><input id=q placeholder="${x.search}" value="${esc(Q)}" oninput="Q=this.value;render(1)"><select onchange="C=this.value;render()"><option value="">${x.all}</option>${cs.map(c=>`<option value="${c}" ${C==c?"selected":""}>${CATS[c].split(" / ")[L=="pt"?0:1]}</option>`).join("")}</select>
+<div class=grid>${l.map(p=>`<div class=card><b>${esc(nm(p))}</b><br>${p.demo?`<span class=tag>${x.demoT}</span>`:""}<div class=mu>${p.price?esc(p.price)+(p.unit?" / "+esc(p.unit):""):x.price}</div><button class="btn sm" style="margin-top:8px" onclick="addC('${p.id}')">${cart.includes(p.id)?"✓":"+"} ${x.add}</button></div>`).join("")}</div>`}
+if(V=="suppliers")return `<h2>${x.sup}</h2>`+SUPS.map(s=>`<div class=card><b>${s[0]}</b> <span class=tag>${x.demoT}</span><div class=mu>${x.kinds[s[1]]} · ${s[2]}</div><button class="btn wa sm" style="margin-top:8px" onclick="wa('Bissau Connect (demo): ${s[0]}')">💬 ${x.wa}</button></div>`).join("");
+if(V=="quote")return `<h2>${x.quote}</h2><div class=card><b>${x.inq}</b>${cart.length?cart.map(id=>{const p=all().find(a=>a.id==id);return p?`<div class=row><span>${esc(nm(p))}</span><button class="btn red sm" onclick="rmC('${id}')">✕</button></div>`:""}).join(""):`<div class=mu>${x.none}</div>`}</div>
+<label>${x.name}</label><input id=n><label>${x.phone}</label><input id=ph type=tel><label>${x.zone}</label><input id=z><label>${x.notes}</label><textarea id=nt rows=3></textarea><button class="btn wa" style="width:100%" onclick="submitQ()">${x.send}</button>`;
+if(V=="area")return `<h2>${x.reg}</h2><label>${x.pn}</label><input id=pn><label>${x.pc}</label><select id=pc>${Object.keys(CATS).map(c=>`<option value="${c}">${CATS[c].split(" / ")[L=="pt"?0:1]}</option>`).join("")}</select><label>${x.pp}</label><input id=pp><label>${x.pu}</label><input id=pu><button class=btn style="width:100%" onclick="addP()">${x.save}</button>
+<h3>${x.mine}</h3>${mineP.map(p=>`<div class=card><div class=row><span>${esc(p.pt)}</span><button class="btn red sm" onclick="delP('${p.id}')">✕</button></div></div>`).join("")}`;
+if(V=="admin"){if(!admin)return `<h2>${x.adm}</h2><label>${x.pin}</label><input id=pin type=password inputmode=numeric><button class=btn onclick="login()">${x.enter}</button>`;
+return `<h2>${x.orders} (${orders.length})</h2><p class=mu>${x.pay}</p>`+(orders.length?orders.map((o,i)=>`<div class=card><b>${esc(o.name)}</b> · ${esc(o.phone)}<div class=mu>${esc(o.zone||"")} · ${new Date(o.date).toLocaleString()}</div><div>${o.items.map(esc).join(", ")}</div>${o.notes?`<div class=mu>${esc(o.notes)}</div>`:""}<select onchange="orders[${i}].status=this.value;sv('bc_orders',orders)">${Object.keys(x.st).map(k=>`<option value=${k} ${o.status==k?"selected":""}>${x.st[k]}</option>`).join("")}</select><div class=row><button class="btn wa sm" onclick="window.open('https://wa.me/'+'${esc(o.phone).replace(/\D/g,"")}')">💬 ${x.wa}</button><button class="btn red sm" onclick="delO(${i})">${x.del}</button></div></div>`).join(""):`<div class=mu>${x.noord}</div>`)}}
+function render(keep){const x=t();document.documentElement.lang=L;demo.textContent=x.demo;lang.textContent=L=="pt"?"FR":"PT";
+nav.innerHTML=[["home","🏠",x.home],["catalog","🧱",x.cat],["suppliers","🏪",x.sup],["quote","📝",x.quote+(cart.length?" ("+cart.length+")":"")],["area","📦",x.area],["admin","⚙️",x.adm]].map(n=>`<button class="${V==n[0]?"on":""}" onclick="go('${n[0]}')"><span>${n[1]}</span>${n[2]}</button>`).join("");
+app.innerHTML=view();if(keep){const q=document.getElementById("q");if(q){q.focus();q.setSelectionRange(Q.length,Q.length)}}}
+function submitQ(){const x=t(),n=g("n"),ph=g("ph");if(!n||!ph||!cart.length)return alert(x.need);
+const items=cart.map(id=>nm(all().find(a=>a.id==id)||{pt:id}));
+const o={name:n,phone:ph,zone:g("z"),notes:g("nt"),items,status:"new",date:Date.now(),payment:{status:"not_enabled",method:null}};
+orders.unshift(o);sv("bc_orders",orders);cart=[];
+wa(`Bissau Connect – ${x.quote}\n${n} (${ph})\n${o.zone}\n- ${items.join("\n- ")}\n${o.notes}`);alert(x.sent);render()}
+const g=i=>document.getElementById(i).value.trim();
+function addP(){const n=g("pn");if(!n)return;mineP.push({id:"u"+Date.now(),pt:n,cat:g("pc"),price:g("pp"),unit:g("pu")});sv("bc_prod",mineP);alert(t().saved);render()}
+function delP(id){mineP=mineP.filter(p=>p.id!=id);sv("bc_prod",mineP);render()}
+function login(){if(g("pin")==ADMIN_PIN){admin=true;render()}else alert(t().bad)}
+function delO(i){orders.splice(i,1);sv("bc_orders",orders);render()}
+render();
+</script></body></html>
